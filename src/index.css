@@ -1,0 +1,80 @@
+
+/* ======================
+   THEME VARIABLES
+====================== */
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1E88E5;
+  --color-primary-dark: #0D47A1;
+  --color-success: #2E7D32;
+  --color-danger: #C62828;
+  --color-bg-light: #F5F7FA;
+  --color-text-dark: #212121;
+  --color-text-grey: #616161;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
+  --color-bg-light: var(--color-bg-light);
+  --color-text-dark: var(--color-text-dark);
+  --color-text-grey: var(--color-text-grey);
+}
+
+/* ======================
+   BASE STYLES
+====================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-dark);
+    background-color: var(--color-bg-light);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply px-3 py-2 text-[13px] font-bold text-text-dark hover:text-primary transition-colors duration-200 uppercase tracking-wide cursor-pointer;
+  }
+  
+  .dropdown-item {
+    @apply block px-5 py-3 text-sm text-text-dark hover:bg-bg-light hover:text-primary border-b border-gray-50 last:border-0 transition-colors;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused; /* Allows parents to stop the scroll by hovering */
+}
