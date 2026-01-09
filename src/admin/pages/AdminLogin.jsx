@@ -16,6 +16,8 @@ export default function AdminLogin() {
 
     try {
       const res = await adminLogin({ email, password });
+console.log("LOGIN RESPONSE 👉", res.data);
+
       localStorage.setItem("admin_token", res.data.token);
       window.location.href = "/admin/dashboard";
     } catch (err) {
