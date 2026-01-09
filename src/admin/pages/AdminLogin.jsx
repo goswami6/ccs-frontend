@@ -9,19 +9,27 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
       const res = await adminLogin({ email, password });
-console.log("LOGIN RESPONSE 👉", res.data);
 
-      localStorage.setItem("admin_token", res.data.token);
-      window.location.href = "/admin/dashboard";
+      console.log("LOGIN RESPONSE 👉", res.data);
+
+      // ✅ IMPORTANT CHECK
+      if (res.data?.token) {
+        localStorage.setItem("admin_token", res.data.token);
+        navigate("/admin/dashboard");
+      } else {
+        setError("Token not received from server");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials. Please try again.");
+      setError(
+        err.response?.data?.message || "Invalid credentials. Please try again."
+      );
     } finally {
       setLoading(false);
     }
