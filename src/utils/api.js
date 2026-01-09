@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ✅ Axios instance
-export const API_BASE_URL = "http://localhost:5006";
+export const API_BASE_URL = "https://ccs-backend-as9t.onrender.com";
 
 // ✅ Axios instance (Base URL + /api)
 const API = axios.create({
