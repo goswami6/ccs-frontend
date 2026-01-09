@@ -77,14 +77,16 @@ export default function AdminLogin() {
 
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full bg-slate-50 border-none rounded-2xl px-12 py-4 text-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none text-slate-700"
-              />
+            <input
+  type="password"
+  placeholder="Password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  required
+  autoComplete="current-password"
+  className="w-full bg-slate-50 border-none rounded-2xl px-12 py-4 text-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none text-slate-700"
+/>
+
             </div>
 
             <button
