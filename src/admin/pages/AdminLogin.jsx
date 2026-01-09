@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { adminLogin } from "../../utils/api";
-import { motion } from "framer-motion"; // Animation ke liye
-import { Lock, Mail, Loader2 } from "lucide-react"; // Icons ke liye
+import { useNavigate } from "react-router-dom"; // Navigation ke liye
+import { motion } from "framer-motion"; 
+import { Lock, Mail, Loader2 } from "lucide-react"; 
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  const navigate = useNavigate(); // Hook initialize karein
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,28 +19,44 @@ export default function AdminLogin() {
 
     try {
       const res = await adminLogin({ email, password });
-      localStorage.setItem("admin_token", res.data.token);
-      window.location.href = "/admin/dashboard";
+
+      // Debugging: Isse check karein console mein ki token aa raha hai ya nahi
+      console.log("API Response:", res);
+
+      if (res && res.token) {
+        // 1. Token store karein
+        localStorage.setItem("admin_token", res.token);
+        
+        // 2. Redirect karein (useNavigate reload nahi karta, state maintain rakhta hai)
+        navigate("/admin/dashboard");
+        
+        // Agar fir bhi issues aayein toh window.location fallback (Optional)
+        // window.location.href = "/admin/dashboard";
+      } else {
+        setError("Login success, but token missing in response.");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials. Please try again.");
+      console.error("Login catch error:", err);
+      const msg = err.response?.data?.message || "Invalid credentials. Please try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4 font-sans">
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4 font-sans relative overflow-hidden">
       {/* Background Decorative Circles */}
       <div className="fixed top-0 left-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
       <div className="fixed bottom-0 right-0 w-96 h-96 bg-red-50 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
         <div className="bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 p-10 border border-slate-100">
-          {/* Logo / Icon Area */}
+          
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 bg-[#C62828] rounded-2xl flex items-center justify-center shadow-lg shadow-red-200">
               <Lock className="text-white" size={30} />
@@ -52,7 +71,7 @@ export default function AdminLogin() {
           </p>
 
           {error && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               className="mb-6 text-xs font-bold text-red-600 bg-red-50 p-3 rounded-xl border border-red-100 flex items-center gap-2"
@@ -67,6 +86,7 @@ export default function AdminLogin() {
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="email"
+                autoComplete="email" 
                 placeholder="Admin Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -79,6 +99,7 @@ export default function AdminLogin() {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="password"
+                autoComplete="current-password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -96,7 +117,7 @@ export default function AdminLogin() {
                 <Loader2 className="animate-spin" size={20} />
               ) : (
                 <>
-                  Secure Access 
+                  Secure Access
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </>
               )}
@@ -104,12 +125,12 @@ export default function AdminLogin() {
           </form>
 
           <div className="mt-10 pt-6 border-t border-slate-50 flex justify-between items-center">
-             <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">
-                © {new Date().getFullYear()} Crescent City
-             </p>
-             <a href="/" className="text-[10px] font-bold text-blue-500 uppercase hover:underline">
-                Back to Website
-             </a>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">
+              © {new Date().getFullYear()} Crescent City
+            </p>
+            <a href="/" className="text-[10px] font-bold text-blue-500 uppercase hover:underline">
+              Back to Website
+            </a>
           </div>
         </div>
       </motion.div>

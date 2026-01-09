@@ -10,6 +10,7 @@ const API = axios.create({
 
 
 // 🔐 Attach token automatically
+// Request Interceptor (Aapka code sahi hai, bas consistency ke liye)
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("admin_token");
@@ -22,7 +23,11 @@ API.interceptors.request.use(
 );
 
 // ================= AUTH =================
-export const adminLogin = (data) => API.post("/auth/login", data);
+// Corrected: Async function banaya aur res.data return kiya
+export const adminLogin = async (data) => {
+  const res = await API.post("/auth/login", data);
+  return res.data; // Component ko direct { token: "..." } milega
+};
 
 // ================= IMAGE (GENERIC) =================
 export const uploadImage = (formData) =>
@@ -174,7 +179,7 @@ export const deleteGalleryItem = (id) => API.delete(`/gallery/${id}`);
 
 // Admin: Student TC Upload
 export const uploadStudentTC = (formData) => API.post('/tc/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+  headers: { 'Content-Type': 'multipart/form-data' }
 });
 
 // User: Search TC
@@ -189,7 +194,7 @@ export const updateEnquiryStatus = (id, status) => API.put(`/enquiry/status/${id
 // settings
 export const fetchSettings = () => API.get('/settings');
 export const updateSettings = (formData) => API.post('/settings/update', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
+  headers: { 'Content-Type': 'multipart/form-data' }
 });
 
 
