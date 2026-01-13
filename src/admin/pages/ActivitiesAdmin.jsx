@@ -215,73 +215,88 @@ export default function ActivitiesAdmin() {
         </Section>
 
         {/* ================= CLUBS ================= */}
-        <Section title="School Clubs" icon={<Users className="text-indigo-500" />}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.clubs.map((c, i) => (
-              <Card key={i} onRemove={() => setData({
-                ...data,
-                clubs: data.clubs.filter((_, x) => x !== i)
-              })}>
-                {/* 1. Club Name */}
-                <Input
-                  label="Club Name"
-                  value={c.name}
-                  placeholder="e.g. Science Club"
-                  onChange={(v) => {
-                    const arr = [...data.clubs]; arr[i].name = v; setData({ ...data, clubs: arr });
-                  }}
-                />
+      {/* ================= CLUBS ================= */}
+<Section title="School Clubs" icon={<Users className="text-indigo-500" />}>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {data.clubs.map((c, i) => (
+      <Card key={i} onRemove={() => setData({
+        ...data,
+        clubs: data.clubs.filter((_, x) => x !== i)
+      })}>
+        <Input
+          label="Club Name"
+          value={c.name}
+          onChange={(v) => {
+            const arr = [...data.clubs]; arr[i].name = v; setData({ ...data, clubs: arr });
+          }}
+        />
 
-                {/* 2. Motto */}
-                <Input
-                  label="Motto"
-                  value={c.motto}
-                  placeholder="e.g. Innovating the Future"
-                  onChange={(v) => {
-                    const arr = [...data.clubs]; arr[i].motto = v; setData({ ...data, clubs: arr });
-                  }}
-                />
-
-                {/* 3. Icon & Gradient Row */}
-                <div className="grid grid-cols-2 gap-3 mt-2">
-                  <Input
-                    label="Lucide Icon"
-                    value={c.icon}
-                    placeholder="e.g. Atom"
-                    onChange={(v) => {
-                      const arr = [...data.clubs]; arr[i].icon = v; setData({ ...data, clubs: arr });
-                    }}
-                  />
-                  <Input
-                    label="Gradient Class"
-                    value={c.gradient}
-                    placeholder="from-blue-600 to-cyan-500"
-                    onChange={(v) => {
-                      const arr = [...data.clubs]; arr[i].gradient = v; setData({ ...data, clubs: arr });
-                    }}
-                  />
-                </div>
-
-                {/* Mini Preview of Gradient */}
-                <div className="mt-3">
-                  <label className="text-[10px] font-black uppercase text-slate-400">Gradient Preview</label>
-                  <div className={`h-8 w-full rounded-lg bg-gradient-to-br ${c.gradient || 'bg-slate-200'}`} />
-                </div>
-
-                <div className="mt-4">
-                  <SaveButton onClick={() => saveSection("clubs")} loading={savingSection === "clubs"} mini />
-                </div>
-              </Card>
-            ))}
+        {/* Dynamic Color Pickers */}
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          <div>
+            <label className="text-[10px] font-black uppercase text-slate-400">Start Color</label>
+            <input 
+              type="color" 
+              value={c.fromColor || "#3b82f6"} 
+              onChange={(e) => {
+                const arr = [...data.clubs]; arr[i].fromColor = e.target.value; setData({ ...data, clubs: arr });
+              }}
+              className="w-full h-10 rounded-lg cursor-pointer border-none p-1 bg-white shadow-sm"
+            />
           </div>
-
-          <div className="mt-6">
-            <AddButton onClick={() => setData({
-              ...data,
-              clubs: [...data.clubs, { name: "", motto: "", icon: "Users", gradient: "from-slate-800 to-slate-900" }]
-            })} />
+          <div>
+            <label className="text-[10px] font-black uppercase text-slate-400">End Color</label>
+            <input 
+              type="color" 
+              value={c.toColor || "#2dd4bf"} 
+              onChange={(e) => {
+                const arr = [...data.clubs]; arr[i].toColor = e.target.value; setData({ ...data, clubs: arr });
+              }}
+              className="w-full h-10 rounded-lg cursor-pointer border-none p-1 bg-white shadow-sm"
+            />
           </div>
-        </Section>
+        </div>
+
+        <Input
+          label="Lucide Icon"
+          value={c.icon}
+          placeholder="e.g. Atom"
+          onChange={(v) => {
+            const arr = [...data.clubs]; arr[i].icon = v; setData({ ...data, clubs: arr });
+          }}
+        />
+
+        {/* Real-time Gradient Preview using Inline Styles */}
+        <div className="mt-3">
+          <label className="text-[10px] font-black uppercase text-slate-400">Gradient Preview</label>
+          <div 
+            className="h-10 w-full rounded-xl shadow-inner transition-all duration-300" 
+            style={{
+              background: `linear-gradient(to bottom right, ${c.fromColor || '#3b82f6'}, ${c.toColor || '#2dd4bf'})`
+            }}
+          />
+        </div>
+
+        <div className="mt-4">
+          <SaveButton onClick={() => saveSection("clubs")} loading={savingSection === "clubs"} mini />
+        </div>
+      </Card>
+    ))}
+  </div>
+
+  <div className="mt-6">
+    <AddButton onClick={() => setData({
+      ...data,
+      clubs: [...data.clubs, { 
+        name: "", 
+        motto: "", 
+        icon: "Users", 
+        fromColor: "#6366f1", 
+        toColor: "#a855f7" 
+      }]
+    })} />
+  </div>
+</Section>
 
         {/* ================= EVENTS ================= */}
         <Section title="Upcoming Events" icon={<Calendar className="text-rose-500" />}>
